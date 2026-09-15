@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+build/
+
+# Environment — NEVER commit real secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data (SQLite database + uploaded media)
+server/data/
+server/uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
