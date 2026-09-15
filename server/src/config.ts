@@ -34,6 +34,7 @@ const envSchema = z.object({
   SESSION_SECRET: z.string().trim().optional(),
   COOKIE_SECURE: z.coerce.boolean().optional(),
   DATABASE_PATH: z.string().trim().default('./data/rjnx.db'),
+  UPLOADS_DIR: z.string().trim().optional(),
   AUTO_MIGRATE: z.coerce.boolean().default(true),
   MAX_UPLOAD_MB: z.coerce.number().int().min(1).max(64).default(8),
   PUBLIC_API_ORIGINS: z.string().trim().default('*'),
@@ -80,7 +81,11 @@ export const config = {
   sessionSecret,
   cookieSecure: e.COOKIE_SECURE ?? isProduction,
   databasePath: path.isAbsolute(e.DATABASE_PATH) ? e.DATABASE_PATH : path.resolve(serverRoot, e.DATABASE_PATH),
-  uploadsDir: path.join(serverRoot, 'uploads'),
+  uploadsDir: e.UPLOADS_DIR
+    ? path.isAbsolute(e.UPLOADS_DIR)
+      ? e.UPLOADS_DIR
+      : path.resolve(serverRoot, e.UPLOADS_DIR)
+    : path.join(serverRoot, 'uploads'),
   clientDist: path.resolve(repoRoot, 'client/dist'),
   autoMigrate: e.AUTO_MIGRATE,
   maxUploadBytes: e.MAX_UPLOAD_MB * 1024 * 1024,

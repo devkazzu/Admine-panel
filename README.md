@@ -80,6 +80,15 @@ and sign in with the bootstrap admin from your `.env`
 (`ADMIN_EMAIL` / `ADMIN_USERNAME` / `ADMIN_PASSWORD`). If no password is
 configured, a random one is generated and printed to the server log **once**.
 
+### Deploying to production ("make it live")
+
+One Node process serves the API, the prebuilt admin UI and uploaded media.
+The repo ships everything for permanent hosting — see
+**[DEPLOY.md](./DEPLOY.md)**: Render blueprint ([`render.yaml`](./render.yaml),
+~5 min), Railway, Docker ([`Dockerfile`](./Dockerfile), any VPS / Fly.io) or
+plain Node + systemd. Only two paths need persistent storage:
+`server/data/` (SQLite) and `server/uploads/` (media).
+
 ### Default credentials
 
 None are hardcoded. The first admin is created from `.env` values on first

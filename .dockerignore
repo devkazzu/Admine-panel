@@ -1,0 +1,24 @@
+# Dependencies (installed inside the image)
+node_modules
+**/node_modules
+
+# Build output (rebuilt inside the image)
+client/dist
+
+# Runtime data — must never be baked into an image
+server/data
+server/uploads
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Git / docs / IDE
+.git
+.github
+docs
+*.log
+.DS_Store
+.idea
+.vscode

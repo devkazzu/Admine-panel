@@ -1,0 +1,63 @@
+# Render Blueprint — RJNX ADMIN as a web service with persistent disks
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: Render dashboard → New → Blueprint → select this repo.
+# You will be prompted for the values marked `sync: false`.
+#
+# NOTE: persistent disks require a paid instance (Starter). On Render's free
+# plan the service is ephemeral — the SQLite DB and uploads reset on every
+# deploy/restart. Use Starter (+1 GB disks, a few $/month) for real data.
+
+services:
+  - type: web
+    name: rjnx-admin
+    runtime: node
+    plan: starter
+    buildCommand: npm run setup && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+
+    # SQLite database + uploaded media survive deploys and restarts
+    disk:
+      - name: rjnx-data
+        mountPath: /app/server/data
+        sizeGB: 1
+      - name: rjnx-uploads
+        mountPath: /app/server/uploads
+        sizeGB: 1
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22.14.0" # node:sqlite needs Node >= 22.5
+      - key: TRUST_PROXY
+        value: "true" # behind Render's reverse proxy
+      - key: COOKIE_SECURE
+        value: "true" # served over HTTPS
+      - key: AUTO_MIGRATE
+        value: "true"
+
+      - key: SESSION_SECRET
+        generateValue: true
+
+      - key: BASE_URL
+        sync: false # e.g. https://rjnx-admin.onrender.com
+
+      # First-boot admin account (change the password after first login)
+      - key: ADMIN_EMAIL
+        value: admin@rjnx.local
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      # Password-reset emails: console (links printed to logs) or smtp + SMTP_*
+      - key: MAIL_TRANSPORT
+        value: console
+
+      # CORS allow-list for the public sites that read /api/public/*
+      # Comma-separated origins, e.g. https://rjnx.example.com,https://esports.rjnx.example.com
+      - key: PUBLIC_API_ORIGINS
+        sync: false
