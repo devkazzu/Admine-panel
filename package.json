@@ -1,0 +1,20 @@
+{
+  "name": "rjnx-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RJNX ADMIN — Central Management Dashboard for the RJNX personal website and RJNX Esports website.",
+  "scripts": {
+    "setup": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n api,web -c blue,magenta \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start",
+    "db:migrate": "npm --prefix server run db:migrate",
+    "db:seed": "npm --prefix server run db:seed",
+    "db:seed:demo": "npm --prefix server run db:seed:demo",
+    "test": "npm --prefix server run test",
+    "typecheck": "npm --prefix server run typecheck && npm --prefix client run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
